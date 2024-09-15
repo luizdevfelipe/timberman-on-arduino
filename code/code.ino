@@ -1,8 +1,6 @@
 // os pinos dos comentários são de 1 a 16 da matriz 1588BS
 // os pinos das contantes são os pinos/portas do Arduino equivalentes
 
-// Resistores de 330
-
 // pino 1 linha 5
 #define row_5 2
 // pino 2 linha 7
@@ -23,9 +21,6 @@
 #define col_8 10
 // pino 15 coluna 7
 #define col_7 11
-
-// Resistores de 220
-
 // pino 14 linha 2
 #define row_2 12
 // pino 13 coluna 1
@@ -38,9 +33,12 @@
 #define col_4 A2
 // pino 9 linha 1
 #define row_1 A3
+// pino A4 botão esquedo
+#define left A4
+// pino A5 botão direito
+#define right A5
 
-
-int data[8][8] = {
+int esquerda[8][8] = {
     {0, 0, 0, 1, 1, 0, 0, 0},
     {0, 1, 1, 1, 1, 0, 0, 0},
     {0, 0, 0, 1, 1, 0, 0, 0},
@@ -51,27 +49,76 @@ int data[8][8] = {
     {0, 1, 0, 1, 1, 0, 0, 0}
 };
 
+int direita[8][8] = {
+    {0, 0, 0, 1, 1, 0, 0, 0},
+    {0, 1, 1, 1, 1, 0, 0, 0},
+    {0, 0, 0, 1, 1, 0, 0, 0},
+    {0, 0, 0, 1, 1, 1, 1, 0},
+    {0, 0, 0, 1, 1, 0, 0, 0},
+    {0, 0, 0, 1, 1, 0, 0, 0},
+    {0, 0, 0, 1, 1, 1, 1, 0},
+    {0, 0, 0, 1, 1, 0, 1, 0}
+};
+
+int start[8][8] = {
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 1, 1, 0, 0, 0, 0},
+    {0, 0, 1, 1, 1, 0, 0, 0},
+    {0, 0, 1, 1, 1, 1, 0, 0},
+    {0, 0, 1, 1, 1, 1, 0, 0},
+    {0, 0, 1, 1, 1, 0, 0, 0},
+    {0, 0, 1, 1, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0}
+};
+
+
 // Definição das funções que serão utilizadas
 void selectRow(int row);
 void selectCol (int col);
+void mostraDisplay(int data[8][8]);
 
 void setup() {
-  for(int i = 2; i <= 13; i++){
-    pinMode(i, OUTPUT);
-  }
-
-    pinMode(A0, OUTPUT);
-    pinMode(A1, OUTPUT);
-    pinMode(A2, OUTPUT);
-    pinMode(A3, OUTPUT);
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
+  pinMode(A0, OUTPUT);
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  pinMode(A3, OUTPUT);
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
 }
 
-void loop() {
-  for(int j=0; j<8; j++){
+void loop() {  
+
+  if (digitalRead(left) == LOW && digitalRead(right) == LOW) {
+    mostraDisplay(start);
+  } else {
+    if (digitalRead(left) == HIGH) {
+      mostraDisplay(esquerda);
+    }
+    if (digitalRead(right) == HIGH) {
+      mostraDisplay(direita);
+    }
+  }
+
+}
+
+void mostraDisplay(int data[8][8]){
+   for(int j=0; j<8; j++){
     selectRow(j+1);
     for(int i=0; i<8; i++)selectCol(i+1, data[j][i]);
-    delay(2);
-  }
+    delay(1);
+   }
 }
 
 void selectRow (int row){
@@ -85,8 +132,7 @@ void selectRow (int row){
   if (row==8) digitalWrite(row_8, HIGH); else digitalWrite(row_8, LOW);
 }
 
-void selectCol (int col, int state){
-  
+void selectCol (int col, int state){  
   if (col==1 && state == 1) digitalWrite(col_1, LOW); else digitalWrite(col_1, HIGH);
   if (col==2 && state == 1) digitalWrite(col_2, LOW); else digitalWrite(col_2, HIGH);
   if (col==3 && state == 1) digitalWrite(col_3, LOW); else digitalWrite(col_3, HIGH);
