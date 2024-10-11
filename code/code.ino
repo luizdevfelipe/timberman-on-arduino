@@ -101,7 +101,7 @@ void mostraDisplay(int data[8][8], char lado = 'n', bool bate = false);
 // Definição de variáveis que serão utilizadas
 bool perdeu = false;
 long randNumber[10];
-int (*matrizes[4])[8][8] = { &data1, &data2, &data3, &data4 };
+int matrizes[4] = { data1, data2, data3, data4 };
 int tempo = 5;
 
 void setup() {
@@ -127,7 +127,6 @@ void setup() {
   pinMode(A5, INPUT);
 
   // Gerando 10 valores aleatórios compreendidos entre 0 e 3
-  // *matrizes[randNumber[i]]
   randomSeed(analogRead(0));
   for (int i = 0; i < 10; i++) {
     randNumber[i] = random(0, 4);
@@ -135,13 +134,21 @@ void setup() {
 }
 
 void loop() {
+  // dalay que evita mal contato de leitura dos botões
+  delay(1);
 
   if (digitalRead(left) == HIGH && digitalRead(right) == HIGH) {
-
+    mostraDisplay(matrizes[randNumber[0]], 'e');
 
 
     while (!perdeu && tempo > 0) {
-      mostraDisplay(*matrizes[randNumber[0]], 'e');
+      if (digitalRead(left) == HIGH) {
+        mostraDisplay(matrizes[randNumber[1]], 'e');
+      }
+
+      if (digitalRead(right) == HIGH) {
+        mostraDisplay(matrizes[randNumber[2]], 'd');
+      }
     }
 
   } else {
@@ -150,32 +157,36 @@ void loop() {
 }
 
 void mostraDisplay(int data[8][8], char lado = 'n', bool bate = false) {
-  if (lado == 'e') {
-    // exibe o personagem do lado esquerdo
-    data[6][1] = 1;
-    data[7][1] = 1;
-  } 
-  if (lado == 'd') {
-    // exibe o personagem do lado direito
-    data[6][6] = 1;
-    data[7][6] = 1;
+  int temp[8][8];
+
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      temp[i][j] = data[i][j];  // Copia elemento por elemento
+    }
   }
 
-  // if (bate && lado) {
-  //   // exibe o personagem do lado esquerdo batendo
-  //   data[6][1] = 1;
-  //   data[7][1] = 1;
-  //   data[6][2] = 1;
-  // } else {
-  //   // exibe o personagem do lado direito batendo
-  //   data[6][6] = 1;
-  //   data[7][6] = 1;
-  //   data[6][5] = 1;
-  // }
+  if (lado == 'e') {
+    // exibe o personagem do lado esquerdo
+    temp[6][1] = 1;
+    temp[7][1] = 1;
+  }
+  if (lado == 'd') {
+    // exibe o personagem do lado direito
+    temp[6][6] = 1;
+    temp[7][6] = 1;
+  }
+  if (lado == 'e' && bate) {
+    // exibe o personagem do lado esquerdo batendo
+    temp[6][2] = 1;
+  }
+  if (lado == 'd' && bate) {
+    // exibe o personagem do lado direito batendo
+    temp[6][5] = 1;
+  }
 
   for (int j = 0; j < 8; j++) {
     selectRow(j + 1);
-    for (int i = 0; i < 8; i++) selectCol(i + 1, data[j][i]);
+    for (int i = 0; i < 8; i++) selectCol(i + 1, temp[j][i]);
     delay(1);
   }
 }
