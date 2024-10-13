@@ -38,71 +38,54 @@
 // pino A5 botão direito
 #define right A5
 
-int data1[8][8] = {
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 1, 1, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 1, 1, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 1, 1, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 }
-};
+int data[4][8][8] = {
+  { { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 1, 1, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 1, 1, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 1, 1, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 } },
 
-int data2[8][8] = {
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 1, 1, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 1, 1, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 }
-};
+  { { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 1, 1, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 1, 1, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 } },
 
-int data3[8][8] = {
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 1, 1, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 }
-};
+  { { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 1, 1, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 } },
 
-int data4[8][8] = {
-  { 0, 1, 1, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 1, 1, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 1, 1, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 },
-  { 0, 0, 0, 1, 1, 0, 0, 0 }
+  { { 0, 1, 1, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 1, 1, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 1, 1, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 0, 0, 0 } }
 };
-
-int start[8][8] = {
-  { 0, 0, 0, 0, 0, 0, 0, 0 },
-  { 0, 0, 1, 1, 0, 0, 0, 0 },
-  { 0, 0, 1, 1, 1, 0, 0, 0 },
-  { 0, 0, 1, 1, 1, 1, 0, 0 },
-  { 0, 0, 1, 1, 1, 1, 0, 0 },
-  { 0, 0, 1, 1, 1, 0, 0, 0 },
-  { 0, 0, 1, 1, 0, 0, 0, 0 },
-  { 0, 0, 0, 0, 0, 0, 0, 0 }
-};
-
 
 // Definição das funções que serão utilizadas
 void selectRow(int row);
 void selectCol(int col);
-void mostraDisplay(int data[8][8], char lado = 'n', bool bate = false);
+void mostraDisplay(int data[4][8][8], long posicao[10], char lado = 'n', bool bate = false);
+bool jogando();
 // Definição de variáveis que serão utilizadas
 bool perdeu = false;
 long randNumber[10];
-int matrizes[4] = { data1, data2, data3, data4 };
-int tempo = 5;
+int atual = 0;
+unsigned long tempoAnterior = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -127,41 +110,67 @@ void setup() {
   pinMode(A5, INPUT);
 
   // Gerando 10 valores aleatórios compreendidos entre 0 e 3
-  randomSeed(analogRead(0));
+  randomSeed(analogRead(A3));
   for (int i = 0; i < 10; i++) {
     randNumber[i] = random(0, 4);
+    // Verificando valores
+    Serial.println(randNumber[i]);
   }
 }
 
 void loop() {
+  int tempo = 5;
   // dalay que evita mal contato de leitura dos botões
   delay(1);
 
   if (digitalRead(left) == HIGH && digitalRead(right) == HIGH) {
-    mostraDisplay(matrizes[randNumber[0]], 'e');
-
 
     while (!perdeu && tempo > 0) {
-      if (digitalRead(left) == HIGH) {
-        mostraDisplay(matrizes[randNumber[1]], 'e');
-      }
+      // obtém o tempo atual desde que o Arduino foi inicializado em ms
+      unsigned long tempoAtual = millis();  
+      // realiza a jogado do jogador, retornando se ele batou ao não
+      bool bateu = jogando();
 
-      if (digitalRead(right) == HIGH) {
-        mostraDisplay(matrizes[randNumber[2]], 'd');
+      if (!bateu) {
+        if (tempoAtual - tempoAnterior >= 1000) {
+          tempo--;
+          // Atualiza o tempoAnterior para o tempo atual
+          tempoAnterior = tempoAtual;
+        }
+      } else {
+        if (tempo < 5) tempo++;
       }
     }
 
   } else {
-    mostraDisplay(start);
+    // do lado esquerdo, sem bater esperando o jogo começar
+    mostraDisplay(data, randNumber, 'e', false);
   }
 }
 
-void mostraDisplay(int data[8][8], char lado = 'n', bool bate = false) {
+bool jogando() {
+  char lado;
+  bool bateu = false;
+
+  if (digitalRead(left) == HIGH) {
+    lado = 'e';
+    bateu = true;
+  } else if (digitalRead(right) == HIGH) {
+    lado = 'd';
+    bateu = true;
+  }
+
+  mostraDisplay(data, randNumber, lado, bateu);
+  return bateu;
+}
+
+void mostraDisplay(int data[4][8][8], long posicao[10], char lado = 'n', bool bate = false) {
   int temp[8][8];
 
+  // Copia elemento por elemento em um vetor temporário
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
-      temp[i][j] = data[i][j];  // Copia elemento por elemento
+      temp[i][j] = data[posicao[atual]][i][j];
     }
   }
 
@@ -169,21 +178,21 @@ void mostraDisplay(int data[8][8], char lado = 'n', bool bate = false) {
     // exibe o personagem do lado esquerdo
     temp[6][1] = 1;
     temp[7][1] = 1;
-  }
-  if (lado == 'd') {
+    if (bate) {
+      // exibe o personagem batendo
+      temp[6][2] = 1;
+    }
+  } else if (lado == 'd') {
     // exibe o personagem do lado direito
     temp[6][6] = 1;
     temp[7][6] = 1;
-  }
-  if (lado == 'e' && bate) {
-    // exibe o personagem do lado esquerdo batendo
-    temp[6][2] = 1;
-  }
-  if (lado == 'd' && bate) {
-    // exibe o personagem do lado direito batendo
-    temp[6][5] = 1;
+    if (bate) {
+      // exibe o personagem batendo
+      temp[6][5] = 1;
+    }
   }
 
+  // exibe o vetor no display selecionando led por led
   for (int j = 0; j < 8; j++) {
     selectRow(j + 1);
     for (int i = 0; i < 8; i++) selectCol(i + 1, temp[j][i]);
@@ -191,6 +200,7 @@ void mostraDisplay(int data[8][8], char lado = 'n', bool bate = false) {
   }
 }
 
+// função que seleciona uma linha com HIGH e ignora as outras com LOW
 void selectRow(int row) {
   if (row == 1) digitalWrite(row_1, HIGH);
   else digitalWrite(row_1, LOW);
@@ -210,6 +220,7 @@ void selectRow(int row) {
   else digitalWrite(row_8, LOW);
 }
 
+// função que seleciona uma coluna com LOW e ignora as outras com HIGH
 void selectCol(int col, int state) {
   if (col == 1 && state == 1) digitalWrite(col_1, LOW);
   else digitalWrite(col_1, HIGH);
