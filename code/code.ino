@@ -138,6 +138,7 @@ void loop() {
       unsigned long tempoAtual = millis();
       // realiza a jogado do jogador, retornando se ele batou ao não
       bool bateu = jogando();
+      // reduzir velocidade de leitura
       delay(10);
 
       // se o jogador não fez uma jogada o tempo disponível diminui, se passados 1 segundo
@@ -187,6 +188,28 @@ void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate
     for (int col = 0; col < 8; col++) {
       temp[row][col] = mapas[mapa[atual]][row][col];
     }
+  }
+
+  if (bate) {
+    for (int row = 0; row < 8; row++) {
+      for (int col = 0; col < 8; col++) {
+        t[row][col] = temp[row][col];
+
+        if (row == 0) {
+          if (altura <= 7) {
+            temp[0][col] = mapas[mapa[atual + 1]][7 - altura][col];
+          }
+          // else {
+          //   altura = 0;
+          //   atual++;
+          // }
+
+        } else {
+          temp[row][col] = t[row - 1][col];
+        }
+      }
+    }
+    // altura++;
   }
 
   if (lado == 'e') {
