@@ -38,7 +38,7 @@
 // pino A5 botão direito
 #define right A5
 
-int data[4][8][8] = {
+const int mapas[4][8][8] = {
   { { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 1, 1, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
@@ -79,13 +79,14 @@ int data[4][8][8] = {
 // Definição das funções que serão utilizadas
 void selectRow(int row);
 void selectCol(int col);
-void mostraDisplay(int data[4][8][8], long posicao[10], char lado = 'n', bool bate = false);
+void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false);
 bool jogando();
 // Definição de variáveis que serão utilizadas
-bool perdeu = false;
+bool perdeu;
 long randNumber[10];
-int atual = 0;
-unsigned long tempoAnterior = 0;
+int atual;
+int altura;
+unsigned long tempoAnterior;
 
 void setup() {
   Serial.begin(9600);
@@ -109,6 +110,13 @@ void setup() {
   pinMode(A4, INPUT);
   pinMode(A5, INPUT);
 
+  // definindo valores nas variáveis
+  bool perdeu = false;
+  long randNumber[10];
+  int atual = 0;
+  int altura = 0;
+  unsigned long tempoAnterior = 0;
+
   // Gerando 10 valores aleatórios compreendidos entre 0 e 3
   randomSeed(analogRead(A3));
   for (int i = 0; i < 10; i++) {
@@ -123,14 +131,16 @@ void loop() {
   // dalay que evita mal contato de leitura dos botões
   delay(1);
 
-  if (digitalRead(left) == HIGH && digitalRead(right) == HIGH) {
+  if (digitalRead(left) == HIGH || digitalRead(right) == HIGH) {
 
     while (!perdeu && tempo > 0) {
       // obtém o tempo atual desde que o Arduino foi inicializado em ms
-      unsigned long tempoAtual = millis();  
+      unsigned long tempoAtual = millis();
       // realiza a jogado do jogador, retornando se ele batou ao não
       bool bateu = jogando();
+      delay(10);
 
+      // se o jogador não fez uma jogada o tempo disponível diminui, se passados 1 segundo
       if (!bateu) {
         if (tempoAtual - tempoAnterior >= 1000) {
           tempo--;
@@ -140,11 +150,15 @@ void loop() {
       } else {
         if (tempo < 5) tempo++;
       }
+
+
+
+      // fim while
     }
 
   } else {
     // do lado esquerdo, sem bater esperando o jogo começar
-    mostraDisplay(data, randNumber, 'e', false);
+    mostraDisplay(mapas, randNumber, 'e', false);
   }
 }
 
@@ -160,17 +174,18 @@ bool jogando() {
     bateu = true;
   }
 
-  mostraDisplay(data, randNumber, lado, bateu);
+  mostraDisplay(mapas, randNumber, lado, bateu);
   return bateu;
 }
 
-void mostraDisplay(int data[4][8][8], long posicao[10], char lado = 'n', bool bate = false) {
+void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false) {
   int temp[8][8];
+  int t[8][8];
 
   // Copia elemento por elemento em um vetor temporário
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 8; j++) {
-      temp[i][j] = data[posicao[atual]][i][j];
+  for (int row = 0; row < 8; row++) {
+    for (int col = 0; col < 8; col++) {
+      temp[row][col] = mapas[mapa[atual]][row][col];
     }
   }
 
@@ -193,9 +208,9 @@ void mostraDisplay(int data[4][8][8], long posicao[10], char lado = 'n', bool ba
   }
 
   // exibe o vetor no display selecionando led por led
-  for (int j = 0; j < 8; j++) {
-    selectRow(j + 1);
-    for (int i = 0; i < 8; i++) selectCol(i + 1, temp[j][i]);
+  for (int row = 0; row < 8; row++) {
+    selectRow(row + 1);
+    for (int col = 0; col < 8; col++) selectCol(col + 1, temp[row][col]);
     delay(1);
   }
 }
