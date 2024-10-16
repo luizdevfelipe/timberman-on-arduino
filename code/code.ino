@@ -112,13 +112,12 @@ void setup() {
 
   // definindo valores nas variáveis
   bool perdeu = false;
-  long randNumber[10];
   int atual = 0;
   int altura = 0;
   unsigned long tempoAnterior = 0;
 
   // Gerando 10 valores aleatórios compreendidos entre 0 e 3
-  randomSeed(analogRead(A3));
+  randomSeed(analogRead(A5));
   for (int i = 0; i < 10; i++) {
     randNumber[i] = random(0, 4);
     // Verificando valores
