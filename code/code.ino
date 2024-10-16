@@ -87,6 +87,10 @@ long randNumber[10];
 int atual;
 int altura;
 unsigned long tempoAnterior;
+int anteriorEsq;
+int anteriorDir;
+int temp[8][8];
+char ladoAnterior;
 
 void setup() {
   Serial.begin(9600);
@@ -111,10 +115,14 @@ void setup() {
   pinMode(A5, INPUT);
 
   // definindo valores nas variáveis
-  bool perdeu = false;
-  int atual = 0;
-  int altura = 0;
-  unsigned long tempoAnterior = 0;
+  perdeu = false;
+  atual = 0;
+  altura = 0;
+  tempoAnterior = 0;
+  anteriorEsq = LOW;
+  anteriorDir = LOW;
+  ladoAnterior = 'e';
+
 
   // Gerando 10 valores aleatórios compreendidos entre 0 e 3
   randomSeed(analogRead(A5));
@@ -122,6 +130,13 @@ void setup() {
     randNumber[i] = random(0, 4);
     // Verificando valores
     Serial.println(randNumber[i]);
+  }
+
+  // Copia elemento por elemento em um vetor temporário
+  for (int row = 0; row < 8; row++) {
+    for (int col = 0; col < 8; col++) {
+      temp[row][col] = mapas[randNumber[0]][row][col];
+    }
   }
 }
 
@@ -150,9 +165,6 @@ void loop() {
       } else {
         if (tempo < 5) tempo++;
       }
-
-
-
       // fim while
     }
 
@@ -165,30 +177,26 @@ void loop() {
 bool jogando() {
   char lado;
   bool bateu = false;
+  int atualEsq = digitalRead(left);
+  int atualDir = digitalRead(right);
 
-  if (digitalRead(left) == HIGH) {
+  if (anteriorEsq == LOW && atualEsq == HIGH) {
     lado = 'e';
     bateu = true;
-  } else if (digitalRead(right) == HIGH) {
+  } else if (anteriorDir == LOW && atualDir == HIGH) {
     lado = 'd';
     bateu = true;
   }
 
+  anteriorEsq = atualEsq;
+  anteriorDir = atualDir;
   mostraDisplay(mapas, randNumber, lado, bateu);
   return bateu;
 }
 
 void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false) {
-  int temp[8][8];
   int t[8][8];
-
-  // Copia elemento por elemento em um vetor temporário
-  for (int row = 0; row < 8; row++) {
-    for (int col = 0; col < 8; col++) {
-      temp[row][col] = mapas[mapa[atual]][row][col];
-    }
-  }
-
+  
   if (bate) {
     for (int row = 0; row < 8; row++) {
       for (int col = 0; col < 8; col++) {
@@ -197,18 +205,17 @@ void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate
         if (row == 0) {
           if (altura <= 7) {
             temp[0][col] = mapas[mapa[atual + 1]][7 - altura][col];
+          } else {
+            altura = 0;
+            atual++;
           }
-          // else {
-          //   altura = 0;
-          //   atual++;
-          // }
 
         } else {
           temp[row][col] = t[row - 1][col];
         }
       }
     }
-    // altura++;
+    altura++;
   }
 
   if (lado == 'e') {
@@ -218,6 +225,14 @@ void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate
     if (bate) {
       // exibe o personagem batendo
       temp[6][2] = 1;
+    } else {
+      // limpa o personagem batendo
+      temp[6][2] = 0;
+    }
+    if (ladoAnterior == 'd') {
+      // limpa o personagem do lado direito
+      temp[6][6] = 0;
+      temp[7][6] = 0;
     }
   } else if (lado == 'd') {
     // exibe o personagem do lado direito
@@ -226,8 +241,18 @@ void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate
     if (bate) {
       // exibe o personagem batendo
       temp[6][5] = 1;
+    } else {
+      // limpa o personagem batendo
+      temp[6][5] = 0;
+    }
+    if (ladoAnterior == 'e') {
+      // limpa o personagem do lado esquerdo
+      temp[6][1] = 0;
+      temp[7][1] = 0;
     }
   }
+  
+  ladoAnterior = lado;
 
   // exibe o vetor no display selecionando led por led
   for (int row = 0; row < 8; row++) {
