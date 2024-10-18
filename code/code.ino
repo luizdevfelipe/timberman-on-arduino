@@ -171,6 +171,15 @@ bool jogando() {
     bateu = true;
   }
 
+  // verifica se o personagem bateu em um tronco
+  if (lado == 'e' && temp[5][2] == 1) {
+    perdeu = true;
+  }
+
+  if (lado == 'd' && temp[5][5] == 1) {
+    perdeu = true;
+  }
+
   anteriorEsq = atualEsq;
   anteriorDir = atualDir;
   mostraDisplay(mapas, randNumber, lado, bateu);
@@ -179,20 +188,6 @@ bool jogando() {
 
 void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false) {
   int t[8][8];
-
-  if (lado == 'e') {
-    // verifica se o personagem bateu em um tronco
-    if (temp[5][1] == 1) {
-      perdeu = true;
-    }
-  }
-
-  if (lado == 'd') {
-    // verifica se o personagem bateu em um tronco
-    if (temp[5][5] == 1) {
-      perdeu = true;
-    }
-  }
 
   if (bate) {
     for (int row = 0; row < 8; row++) {
