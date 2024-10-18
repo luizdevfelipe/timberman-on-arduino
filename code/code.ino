@@ -53,7 +53,7 @@ const int mapas[4][8][8] = {
     { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 1, 1, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
-    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 1, 1, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 } },
 
@@ -62,7 +62,7 @@ const int mapas[4][8][8] = {
     { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 1, 1, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
-    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 1, 1, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 } },
 
@@ -81,6 +81,7 @@ void selectRow(int row);
 void selectCol(int col);
 void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false);
 bool jogando();
+void definir_valores_padrao();
 // Definição de variáveis que serão utilizadas
 bool perdeu;
 long randNumber[10];
@@ -114,36 +115,14 @@ void setup() {
   pinMode(A4, INPUT);
   pinMode(A5, INPUT);
 
-  // definindo valores nas variáveis
-  perdeu = false;
-  atual = 0;
-  altura = 0;
-  tempoAnterior = 0;
-  anteriorEsq = LOW;
-  anteriorDir = LOW;
-  ladoAnterior = 'e';
-
-
-  // Gerando 10 valores aleatórios compreendidos entre 0 e 3
-  randomSeed(analogRead(A5));
-  for (int i = 0; i < 10; i++) {
-    randNumber[i] = random(0, 4);
-    // Verificando valores
-    Serial.println(randNumber[i]);
-  }
-
-  // Copia elemento por elemento em um vetor temporário
-  for (int row = 0; row < 8; row++) {
-    for (int col = 0; col < 8; col++) {
-      temp[row][col] = mapas[randNumber[0]][row][col];
-    }
-  }
+  definir_valores_padrao();
 }
 
 void loop() {
   int tempo = 5;
+  perdeu = false;
   // dalay que evita mal contato de leitura dos botões
-  delay(1);
+  delay(5);
 
   if (digitalRead(left) == HIGH || digitalRead(right) == HIGH) {
 
@@ -165,9 +144,13 @@ void loop() {
       } else {
         if (tempo < 5) tempo++;
       }
-      // fim while
     }
 
+    // quando perde, reseta os valores de variáveis
+    definir_valores_padrao();
+    // fazer exibir o placar, com uma função dedicada
+    // TODO
+    delay(2000);
   } else {
     // do lado esquerdo, sem bater esperando o jogo começar
     mostraDisplay(mapas, randNumber, 'e', false);
@@ -196,7 +179,21 @@ bool jogando() {
 
 void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false) {
   int t[8][8];
-  
+
+  if (lado == 'e') {
+    // verifica se o personagem bateu em um tronco
+    if (temp[5][1] == 1) {
+      perdeu = true;
+    }
+  }
+
+  if (lado == 'd') {
+    // verifica se o personagem bateu em um tronco
+    if (temp[5][5] == 1) {
+      perdeu = true;
+    }
+  }
+
   if (bate) {
     for (int row = 0; row < 8; row++) {
       for (int col = 0; col < 8; col++) {
@@ -225,6 +222,9 @@ void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate
     if (bate) {
       // exibe o personagem batendo
       temp[6][2] = 1;
+      // remove o tronco do lado oposto
+      temp[6][5] = 0;
+      temp[6][6] = 0;
     } else {
       // limpa o personagem batendo
       temp[6][2] = 0;
@@ -241,6 +241,9 @@ void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate
     if (bate) {
       // exibe o personagem batendo
       temp[6][5] = 1;
+      // remove o tronco do lado oposto
+      temp[6][1] = 0;
+      temp[6][2] = 0;
     } else {
       // limpa o personagem batendo
       temp[6][5] = 0;
@@ -251,7 +254,7 @@ void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate
       temp[7][1] = 0;
     }
   }
-  
+
   ladoAnterior = lado;
 
   // exibe o vetor no display selecionando led por led
@@ -300,4 +303,24 @@ void selectCol(int col, int state) {
   else digitalWrite(col_7, HIGH);
   if (col == 8 && state == 1) digitalWrite(col_8, LOW);
   else digitalWrite(col_8, HIGH);
+}
+// função que define os valores padrões de uma nova partida
+void definir_valores_padrao() {
+  // Gerando 10 valores aleatórios compreendidos entre 0 e 3
+  randomSeed(analogRead(A5));
+  for (int i = 0; i < 10; i++) {
+    randNumber[i] = random(0, 4);
+  }
+  atual = 0;
+  altura = 0;
+  tempoAnterior = 0;
+  anteriorEsq = LOW;
+  anteriorDir = LOW;
+  ladoAnterior = 'e';
+  // Copia elemento por elemento em um vetor temporário
+  for (int row = 0; row < 8; row++) {
+    for (int col = 0; col < 8; col++) {
+      temp[row][col] = mapas[randNumber[0]][row][col];
+    }
+  }
 }
