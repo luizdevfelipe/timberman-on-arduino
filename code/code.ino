@@ -38,7 +38,7 @@
 // pino A5 botão direito
 #define right A5
 
-const int mapas[4][8][8] = {
+const bool mapas[4][8][8] = {
   { { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 1, 1, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
@@ -79,7 +79,7 @@ const int mapas[4][8][8] = {
 // Definição das funções que serão utilizadas
 void selectRow(int row);
 void selectCol(int col);
-void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false);
+void mostraDisplay(bool mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false);
 bool jogando();
 void definir_valores_padrao();
 // Definição de variáveis que serão utilizadas
@@ -87,10 +87,11 @@ bool perdeu;
 long randNumber[10];
 int atual;
 int altura;
+int pontuacao;
 unsigned long tempoAnterior;
 int anteriorEsq;
 int anteriorDir;
-int temp[8][8];
+bool temp[8][8];
 char ladoAnterior;
 
 void setup() {
@@ -131,14 +132,11 @@ void loop() {
       unsigned long tempoAtual = millis();
       // realiza a jogado do jogador, retornando se ele batou ao não
       bool bateu = jogando();
-      // reduzir velocidade de leitura
-      delay(10);
-
-      // se o jogador não fez uma jogada o tempo disponível diminui, se passados 1 segundo
+      // se o jogador não fez uma jogada
       if (!bateu) {
+        // o tempo disponível diminui, se passados 1 segundo
         if (tempoAtual - tempoAnterior >= 1000) {
           tempo--;
-          // Atualiza o tempoAnterior para o tempo atual
           tempoAnterior = tempoAtual;
         }
       } else {
@@ -146,11 +144,14 @@ void loop() {
       }
     }
 
+    // fazer exibir o placar, com uma função dedicada
+    Serial.print("Sua pontuação: ");
+    Serial.println(pontuacao);
+    delay(2000);
+
     // quando perde, reseta os valores de variáveis
     definir_valores_padrao();
-    // fazer exibir o placar, com uma função dedicada
-    // TODO
-    delay(2000);
+
   } else {
     // do lado esquerdo, sem bater esperando o jogo começar
     mostraDisplay(mapas, randNumber, 'e', false);
@@ -163,21 +164,25 @@ bool jogando() {
   int atualEsq = digitalRead(left);
   int atualDir = digitalRead(right);
 
+  // faz a leitura dos botões, somente quando pressionado e solto (click completo)
   if (anteriorEsq == LOW && atualEsq == HIGH) {
     lado = 'e';
     bateu = true;
+
+    if (temp[5][2] == 1 && bateu) {
+      perdeu = true;
+    } else {
+      pontuacao++;
+    }
   } else if (anteriorDir == LOW && atualDir == HIGH) {
     lado = 'd';
     bateu = true;
-  }
 
-  // verifica se o personagem bateu em um tronco
-  if (lado == 'e' && temp[5][2] == 1) {
-    perdeu = true;
-  }
-
-  if (lado == 'd' && temp[5][5] == 1) {
-    perdeu = true;
+    if (temp[5][5] == 1 && bateu) {
+      perdeu = true;
+    } else {
+      pontuacao++;
+    }
   }
 
   anteriorEsq = atualEsq;
@@ -186,8 +191,8 @@ bool jogando() {
   return bateu;
 }
 
-void mostraDisplay(int mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false) {
-  int t[8][8];
+void mostraDisplay(bool mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false) {
+  bool t[8][8];
 
   if (bate) {
     for (int row = 0; row < 8; row++) {
@@ -308,6 +313,7 @@ void definir_valores_padrao() {
   }
   atual = 0;
   altura = 0;
+  pontuacao = 0;
   tempoAnterior = 0;
   anteriorEsq = LOW;
   anteriorDir = LOW;
