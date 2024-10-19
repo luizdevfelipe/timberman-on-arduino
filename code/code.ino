@@ -17,14 +17,18 @@
 #define row_6 8
 // pino 8 linha 3
 #define row_3 9
-// pino 16 coluna 8
-#define col_8 10
+/* pino da última coluna que não é mais usado
+ pino 16 coluna 8
+ #define col_8 10
+*/
 // pino 15 coluna 7
 #define col_7 11
 // pino 14 linha 2
 #define row_2 12
-// pino 13 coluna 1
-#define col_1 13
+/* pino da primeira coluna que não é mais utilizado
+ pino 13 coluna 1
+ #define col_1 13
+*/
 // pino 12 linha 4
 #define row_4 A0
 // pino 11 coluna 6
@@ -34,9 +38,9 @@
 // pino 9 linha 1
 #define row_1 A3
 // pino A4 botão esquedo
-#define left A4
+#define left 10
 // pino A5 botão direito
-#define right A5
+#define right 13
 
 const bool mapas[4][8][8] = {
   { { 0, 0, 0, 1, 1, 0, 0, 0 },
@@ -95,8 +99,6 @@ bool temp[8][8];
 char ladoAnterior;
 
 void setup() {
-  Serial.begin(9600);
-
   pinMode(2, OUTPUT);
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
@@ -105,16 +107,14 @@ void setup() {
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
-  pinMode(10, OUTPUT);
+  pinMode(10, INPUT);
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
+  pinMode(13, INPUT);
   pinMode(A0, OUTPUT);
   pinMode(A1, OUTPUT);
   pinMode(A2, OUTPUT);
   pinMode(A3, OUTPUT);
-  pinMode(A4, INPUT);
-  pinMode(A5, INPUT);
 
   definir_valores_padrao();
 }
@@ -145,8 +145,8 @@ void loop() {
     }
 
     // fazer exibir o placar, com uma função dedicada
-    Serial.print("Sua pontuação: ");
-    Serial.println(pontuacao);
+    // Serial.print("Sua pontuação: ");
+    // Serial.println(pontuacao);
     delay(2000);
 
     // quando perde, reseta os valores de variáveis
@@ -168,7 +168,7 @@ bool jogando() {
   if (anteriorEsq == LOW && atualEsq == HIGH) {
     lado = 'e';
     bateu = true;
-
+    // verifica se o personagem bateu a cabeça na jogada
     if (temp[5][2] == 1 && bateu) {
       perdeu = true;
     } else {
@@ -177,7 +177,7 @@ bool jogando() {
   } else if (anteriorDir == LOW && atualDir == HIGH) {
     lado = 'd';
     bateu = true;
-
+    // verifica se o personagem bateu a cabeça na jogada
     if (temp[5][5] == 1 && bateu) {
       perdeu = true;
     } else {
@@ -287,8 +287,8 @@ void selectRow(int row) {
 
 // função que seleciona uma coluna com LOW e ignora as outras com HIGH
 void selectCol(int col, int state) {
-  if (col == 1 && state == 1) digitalWrite(col_1, LOW);
-  else digitalWrite(col_1, HIGH);
+  // if (col == 1 && state == 1) digitalWrite(col_1, LOW);
+  // else digitalWrite(col_1, HIGH);
   if (col == 2 && state == 1) digitalWrite(col_2, LOW);
   else digitalWrite(col_2, HIGH);
   if (col == 3 && state == 1) digitalWrite(col_3, LOW);
@@ -301,8 +301,8 @@ void selectCol(int col, int state) {
   else digitalWrite(col_6, HIGH);
   if (col == 7 && state == 1) digitalWrite(col_7, LOW);
   else digitalWrite(col_7, HIGH);
-  if (col == 8 && state == 1) digitalWrite(col_8, LOW);
-  else digitalWrite(col_8, HIGH);
+  // if (col == 8 && state == 1) digitalWrite(col_8, LOW);
+  // else digitalWrite(col_8, HIGH);
 }
 // função que define os valores padrões de uma nova partida
 void definir_valores_padrao() {
