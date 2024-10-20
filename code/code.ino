@@ -1,3 +1,10 @@
+// Biblioteca que controla o display LCD
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// definindo variável para o display
+LiquidCrystal_I2C lcd_1(0x27, 16, 2);
+
 // os pinos dos comentários são de 1 a 16 da matriz 1588BS
 // os pinos das contantes são os pinos/portas do Arduino equivalentes
 
@@ -99,6 +106,7 @@ bool temp[8][8];
 char ladoAnterior;
 
 void setup() {
+  lcd_1.init();
   pinMode(2, OUTPUT);
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
@@ -117,14 +125,18 @@ void setup() {
   pinMode(A3, OUTPUT);
 
   definir_valores_padrao();
+
+  lcd_1.setBacklight(HIGH);
+  lcd_1.print("Aperte um botao");
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("Evite os galhos!");
 }
 
 void loop() {
   int tempo = 5;
   perdeu = false;
-  // dalay que evita mal contato de leitura dos botões
-  delay(5);
-
+  // delay que evita mal contato de leitura dos botões
+  delay(5);  
   if (digitalRead(left) == HIGH || digitalRead(right) == HIGH) {
 
     while (!perdeu && tempo > 0) {
