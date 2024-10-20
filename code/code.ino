@@ -9,13 +9,13 @@ LiquidCrystal_I2C lcd_1(0x27, 16, 2);
 // os pinos das contantes são os pinos/portas do Arduino equivalentes
 
 // pino 1 linha 5
-#define row_5 2
+#define row_5 A0
 // pino 2 linha 7
-#define row_7 3
+#define row_7 A1
 // pino 3 coluna 2
-#define col_2 4
+#define col_2 A2
 // pino 4 coluna 3
-#define col_3 5
+#define col_3 A3
 // pino 5 linha 8
 #define row_8 6
 // pino 6 coluna 5
@@ -37,13 +37,13 @@ LiquidCrystal_I2C lcd_1(0x27, 16, 2);
  #define col_1 13
 */
 // pino 12 linha 4
-#define row_4 A0
+#define row_4 2
 // pino 11 coluna 6
-#define col_6 A1
+#define col_6 3
 // pino 10 coluna 4
-#define col_4 A2
+#define col_4 4
 // pino 9 linha 1
-#define row_1 A3
+#define row_1 5
 // pino A4 botão esquedo
 #define left 10
 // pino A5 botão direito
