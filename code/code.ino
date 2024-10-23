@@ -9,45 +9,37 @@ LiquidCrystal_I2C lcd_1(0x27, 16, 2);
 // os pinos das contantes são os pinos/portas do Arduino equivalentes
 
 // pino 1 linha 5
-#define row_5 A0
+#define row_5 A2
 // pino 2 linha 7
-#define row_7 A1
+#define row_7 A3
 // pino 3 coluna 2
-#define col_2 A2
+#define col_2 7
 // pino 4 coluna 3
-#define col_3 A3
+#define col_3 6
 // pino 5 linha 8
-#define row_8 6
+#define row_8 5
 // pino 6 coluna 5
-#define col_5 7
+#define col_5 4
 // pino 7 linha 6
-#define row_6 8
+#define row_6 3
 // pino 8 linha 3
-#define row_3 9
-/* pino da última coluna que não é mais usado
- pino 16 coluna 8
- #define col_8 10
-*/
+#define row_3 2
 // pino 15 coluna 7
-#define col_7 11
+#define col_7 8
 // pino 14 linha 2
-#define row_2 12
-/* pino da primeira coluna que não é mais utilizado
- pino 13 coluna 1
- #define col_1 13
-*/
+#define row_2 9
 // pino 12 linha 4
-#define row_4 2
+#define row_4 10
 // pino 11 coluna 6
-#define col_6 3
+#define col_6 11
 // pino 10 coluna 4
-#define col_4 4
+#define col_4 12
 // pino 9 linha 1
-#define row_1 5
-// pino A4 botão esquedo
-#define left 10
-// pino A5 botão direito
-#define right 13
+#define row_1 13
+// pino A0 botão esquedo
+#define left A0
+// pino A1 botão direito
+#define right A1
 
 const bool mapas[4][8][8] = {
   { { 0, 0, 0, 1, 1, 0, 0, 0 },
@@ -119,24 +111,19 @@ void setup() {
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
   pinMode(13, INPUT);
-  pinMode(A0, OUTPUT);
-  pinMode(A1, OUTPUT);
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
   pinMode(A2, OUTPUT);
   pinMode(A3, OUTPUT);
 
   definir_valores_padrao();
-
-  lcd_1.setBacklight(HIGH);
-  lcd_1.print("Aperte um botao");
-  lcd_1.setCursor(0, 1);
-  lcd_1.print("Evite os galhos!");
 }
 
 void loop() {
   int tempo = 5;
   perdeu = false;
   // delay que evita mal contato de leitura dos botões
-  delay(5);  
+  delay(5);
   if (digitalRead(left) == HIGH || digitalRead(right) == HIGH) {
 
     while (!perdeu && tempo > 0) {
@@ -157,10 +144,23 @@ void loop() {
     }
 
     // fazer exibir o placar, com uma função dedicada
-    // Serial.print("Sua pontuação: ");
-    // Serial.println(pontuacao);
-    delay(2000);
-
+    lcd_1.clear();
+    lcd_1.print("Voce Perdeu!");
+    lcd_1.setCursor(0, 1);
+    lcd_1.print("Pontuacao: ");
+    lcd_1.print(pontuacao);
+    lcd_1.setBacklight(LOW);
+    delay(1000);
+    lcd_1.setBacklight(HIGH);
+    delay(1000);
+    lcd_1.setBacklight(LOW);
+    delay(1000);
+    lcd_1.setBacklight(HIGH);
+    delay(1000);
+    lcd_1.setBacklight(LOW);
+    delay(1000);
+    lcd_1.setBacklight(HIGH);
+    delay(2100);
     // quando perde, reseta os valores de variáveis
     definir_valores_padrao();
 
@@ -336,4 +336,9 @@ void definir_valores_padrao() {
       temp[row][col] = mapas[randNumber[0]][row][col];
     }
   }
+  lcd_1.setBacklight(HIGH);
+  lcd_1.setCursor(0, 0);
+  lcd_1.print("Aperte um botao");
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("Evite os galhos!");
 }
