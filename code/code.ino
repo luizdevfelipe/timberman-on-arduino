@@ -80,11 +80,14 @@ const bool mapas[4][8][8] = {
 };
 
 // Definição das funções que serão utilizadas
-void selectRow(int row);
-void selectCol(int col);
-void mostraDisplay(bool mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false);
 bool jogando();
+void mostraDisplay(bool mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false);
+void mostraTempo();
+void mostraPontuacao();
+void selectRow(int row);
+void selectCol(int col, int state);
 void definir_valores_padrao();
+
 // Definição de variáveis que serão utilizadas
 bool perdeu;
 long randNumber[10];
@@ -96,6 +99,7 @@ int anteriorEsq;
 int anteriorDir;
 bool temp[8][8];
 char ladoAnterior;
+int tempo;
 
 void setup() {
   lcd_1.init();
@@ -107,10 +111,10 @@ void setup() {
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
-  pinMode(10, INPUT);
+  pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
-  pinMode(13, INPUT);
+  pinMode(13, OUTPUT);
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
   pinMode(A2, OUTPUT);
@@ -120,8 +124,6 @@ void setup() {
 }
 
 void loop() {
-  int tempo = 5;
-  perdeu = false;
   // delay que evita mal contato de leitura dos botões
   delay(5);
   if (digitalRead(left) == HIGH || digitalRead(right) == HIGH) {
@@ -131,18 +133,19 @@ void loop() {
       unsigned long tempoAtual = millis();
       // realiza a jogado do jogador, retornando se ele batou ao não
       bool bateu = jogando();
-      // se o jogador não fez uma jogada
+
       if (!bateu) {
         // o tempo disponível diminui, se passados 1 segundo
         if (tempoAtual - tempoAnterior >= 1000) {
           tempo--;
           tempoAnterior = tempoAtual;
+          // exibe no lcd o tempo para fazer a próxima jogada
+          mostraTempo();
         }
       } else {
-        if (tempo < 5) tempo++;
+        if (tempo <= 5) tempo++;
       }
     }
-
     // fazer exibir o placar, com uma função dedicada
     lcd_1.clear();
     lcd_1.print("Voce Perdeu!");
@@ -163,7 +166,6 @@ void loop() {
     delay(2100);
     // quando perde, reseta os valores de variáveis
     definir_valores_padrao();
-
   } else {
     // do lado esquerdo, sem bater esperando o jogo começar
     mostraDisplay(mapas, randNumber, 'e', false);
@@ -277,6 +279,36 @@ void mostraDisplay(bool mapas[4][8][8], long mapa[10], char lado = 'n', bool bat
   }
 }
 
+void mostraTempo() {
+  lcd_1.clear();
+  lcd_1.print("Seja rapido!");
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("Tempo: ");
+  for (int i = 0; i < tempo; i++) {
+    lcd_1.print("#");
+  }
+}
+
+void mostraPontuacao() {
+  lcd_1.clear();
+    lcd_1.print("Voce Perdeu!");
+    lcd_1.setCursor(0, 1);
+    lcd_1.print("Pontuacao: ");
+    lcd_1.print(pontuacao);
+    lcd_1.setBacklight(LOW);
+    delay(1000);
+    lcd_1.setBacklight(HIGH);
+    delay(1000);
+    lcd_1.setBacklight(LOW);
+    delay(1000);
+    lcd_1.setBacklight(HIGH);
+    delay(1000);
+    lcd_1.setBacklight(LOW);
+    delay(1000);
+    lcd_1.setBacklight(HIGH);
+    delay(2100);
+}
+
 // função que seleciona uma linha com HIGH e ignora as outras com LOW
 void selectRow(int row) {
   if (row == 1) digitalWrite(row_1, HIGH);
@@ -299,8 +331,6 @@ void selectRow(int row) {
 
 // função que seleciona uma coluna com LOW e ignora as outras com HIGH
 void selectCol(int col, int state) {
-  // if (col == 1 && state == 1) digitalWrite(col_1, LOW);
-  // else digitalWrite(col_1, HIGH);
   if (col == 2 && state == 1) digitalWrite(col_2, LOW);
   else digitalWrite(col_2, HIGH);
   if (col == 3 && state == 1) digitalWrite(col_3, LOW);
@@ -313,9 +343,8 @@ void selectCol(int col, int state) {
   else digitalWrite(col_6, HIGH);
   if (col == 7 && state == 1) digitalWrite(col_7, LOW);
   else digitalWrite(col_7, HIGH);
-  // if (col == 8 && state == 1) digitalWrite(col_8, LOW);
-  // else digitalWrite(col_8, HIGH);
 }
+
 // função que define os valores padrões de uma nova partida
 void definir_valores_padrao() {
   // Gerando 10 valores aleatórios compreendidos entre 0 e 3
@@ -330,6 +359,8 @@ void definir_valores_padrao() {
   anteriorEsq = LOW;
   anteriorDir = LOW;
   ladoAnterior = 'e';
+  tempo = 5;
+  perdeu = false;
   // Copia elemento por elemento em um vetor temporário
   for (int row = 0; row < 8; row++) {
     for (int col = 0; col < 8; col++) {
@@ -337,6 +368,7 @@ void definir_valores_padrao() {
     }
   }
   lcd_1.setBacklight(HIGH);
+  lcd_1.clear();
   lcd_1.setCursor(0, 0);
   lcd_1.print("Aperte um botao");
   lcd_1.setCursor(0, 1);
