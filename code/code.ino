@@ -61,7 +61,7 @@ const bool mapas[4][8][8] = {
     { 0, 0, 0, 1, 1, 0, 0, 0 } },
 
   { { 0, 0, 0, 1, 1, 0, 0, 0 },
-    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 1, 1, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 1, 1, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
@@ -74,7 +74,7 @@ const bool mapas[4][8][8] = {
     { 0, 0, 0, 1, 1, 1, 1, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 1, 1, 1, 1, 0, 0, 0 },
-    { 0, 0, 0, 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 1, 1, 1, 1, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0 } }
 };
@@ -99,7 +99,7 @@ int anteriorEsq;
 int anteriorDir;
 bool temp[8][8];
 char ladoAnterior;
-int tempo;
+float tempo;
 
 void setup() {
   lcd_1.init();
@@ -136,14 +136,38 @@ void loop() {
 
       if (!bateu) {
         // o tempo disponível diminui, se passados 1 segundo
-        if (tempoAtual - tempoAnterior >= 1000) {
-          tempo--;
+        if (tempoAtual - tempoAnterior >= 300) {
+          if (pontuacao >= 20) {
+            tempo = tempo - 1.1;
+          } else if (pontuacao >= 50) {
+            tempo = tempo - 1.2;
+          } else if (pontuacao >= 80) {
+            tempo = tempo - 1.5;
+          } else if (pontuacao >= 110) {
+            tempo = tempo - 2.5;
+          } else {
+            tempo = tempo - 1.0;
+          }
           tempoAnterior = tempoAtual;
           // exibe no lcd o tempo para fazer a próxima jogada
-          mostraTempo();
+          // lcd_1.clear();
+          // lcd_1.print("Seja rapido!");
+          // mostraTempo();
         }
       } else {
-        if (tempo <= 5) tempo++;
+        if (tempo <= 5) {
+          if (pontuacao >= 20) {
+            tempo = tempo + 0.7;
+          } else if (pontuacao >= 50) {
+            tempo = tempo + 0.5;
+          } else if (pontuacao >= 80) {
+            tempo = tempo + 0.1;
+          } else if (pontuacao >= 110) {
+            tempo = tempo + 0.01;
+          } else {
+            tempo = tempo + 1;
+          }
+        }
       }
     }
     // fazer exibir o placar, com uma função dedicada
@@ -207,6 +231,7 @@ bool jogando() {
 
 void mostraDisplay(bool mapas[4][8][8], long mapa[10], char lado = 'n', bool bate = false) {
   bool t[8][8];
+  if (atual == 8) atual = 0;
 
   if (bate) {
     for (int row = 0; row < 8; row++) {
@@ -280,8 +305,6 @@ void mostraDisplay(bool mapas[4][8][8], long mapa[10], char lado = 'n', bool bat
 }
 
 void mostraTempo() {
-  lcd_1.clear();
-  lcd_1.print("Seja rapido!");
   lcd_1.setCursor(0, 1);
   lcd_1.print("Tempo: ");
   for (int i = 0; i < tempo; i++) {
@@ -291,22 +314,22 @@ void mostraTempo() {
 
 void mostraPontuacao() {
   lcd_1.clear();
-    lcd_1.print("Voce Perdeu!");
-    lcd_1.setCursor(0, 1);
-    lcd_1.print("Pontuacao: ");
-    lcd_1.print(pontuacao);
-    lcd_1.setBacklight(LOW);
-    delay(1000);
-    lcd_1.setBacklight(HIGH);
-    delay(1000);
-    lcd_1.setBacklight(LOW);
-    delay(1000);
-    lcd_1.setBacklight(HIGH);
-    delay(1000);
-    lcd_1.setBacklight(LOW);
-    delay(1000);
-    lcd_1.setBacklight(HIGH);
-    delay(2100);
+  lcd_1.print("Voce Perdeu!");
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("Pontuacao: ");
+  lcd_1.print(pontuacao);
+  lcd_1.setBacklight(LOW);
+  delay(1000);
+  lcd_1.setBacklight(HIGH);
+  delay(1000);
+  lcd_1.setBacklight(LOW);
+  delay(1000);
+  lcd_1.setBacklight(HIGH);
+  delay(1000);
+  lcd_1.setBacklight(LOW);
+  delay(1000);
+  lcd_1.setBacklight(HIGH);
+  delay(2100);
 }
 
 // função que seleciona uma linha com HIGH e ignora as outras com LOW
@@ -348,7 +371,7 @@ void selectCol(int col, int state) {
 // função que define os valores padrões de uma nova partida
 void definir_valores_padrao() {
   // Gerando 10 valores aleatórios compreendidos entre 0 e 3
-  randomSeed(analogRead(A5));
+  randomSeed(analogRead(A0));
   for (int i = 0; i < 10; i++) {
     randNumber[i] = random(0, 4);
   }
