@@ -100,6 +100,7 @@ int anteriorDir;
 bool temp[8][8];
 char ladoAnterior;
 float tempo;
+int nivel;
 
 void setup() {
   lcd_1.init();
@@ -137,30 +138,36 @@ void loop() {
       if (!bateu) {
         // o tempo disponível diminui, se passados 1 segundo
         if (tempoAtual - tempoAnterior >= 300) {
-          if (pontuacao >= 20) {
+          if (pontuacao >= 20 && pontuacao < 50) {
             tempo = tempo - 1.1;
-          } else if (pontuacao >= 50) {
+            nivel = 2;
+          } else if (pontuacao >= 50 && pontuacao < 80) {
             tempo = tempo - 1.2;
-          } else if (pontuacao >= 80) {
+            nivel = 3;
+          } else if (pontuacao >= 80 && pontuacao < 110) {
             tempo = tempo - 1.5;
+            nivel = 4;
           } else if (pontuacao >= 110) {
             tempo = tempo - 2.5;
+            nivel = 5;
           } else {
             tempo = tempo - 1.0;
+            nivel = 1;
           }
           tempoAnterior = tempoAtual;
           // exibe no lcd o tempo para fazer a próxima jogada
-          // lcd_1.clear();
-          // lcd_1.print("Seja rapido!");
-          // mostraTempo();
+          lcd_1.clear();
+          lcd_1.print("Nivel Atual: ");
+          lcd_1.print(nivel);
+          mostraTempo();
         }
       } else {
         if (tempo <= 5) {
-          if (pontuacao >= 20) {
+          if (pontuacao >= 20 && pontuacao < 50) {
             tempo = tempo + 0.7;
-          } else if (pontuacao >= 50) {
+          } else if (pontuacao >= 50 && pontuacao < 80) {
             tempo = tempo + 0.5;
-          } else if (pontuacao >= 80) {
+          } else if (pontuacao >= 80 && pontuacao < 110) {
             tempo = tempo + 0.1;
           } else if (pontuacao >= 110) {
             tempo = tempo + 0.01;
