@@ -2,7 +2,9 @@
 
 <h2 align="center">🔸 <a href='#Sobre'>Sobre</a> 🔸 <a href='#Motivo'>Motivação</a> 🔸 <a href='#Experimente'>Experimente</a></h2>
 
-![timberman](https://github.com/user-attachments/assets/734dab47-285e-4dc7-a7ae-342e5700ea20)
+<p align="center">
+ <img width="460" hight="300" src="assets/readme/timberman.gif">
+</p>
 
 <h2 id='Sobre' align="center">Simulando o jogo virtual Timberman na plataforma do Arduino</h2>
 <p>Esse projeto demonstra quão poderoso pode ser esse dispositivo com um pouco de programação 🧑‍💻 e elaboração de circuitos </p>
