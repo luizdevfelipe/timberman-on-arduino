@@ -1,9 +1,9 @@
 <h1 align="center">Jogo Timberman no Arduino</h1>
 
-<h2 align="center">🔸 <a href='#Sobre'>Sobre</a> 🔸 <a href='#Motivo'>Motivação</a> 🔸 <a href='#Experimente'>Experimente</a></h2>
+<h2 align="center">⏹️ <a href='#Sobre'>Sobre</a> ⏹️ <a href='#Motivo'>Motivação</a> ⏹️ <a href='#Experimente'>Experimente</a></h2>
 
 <p align="center">
- <img width="460" hight="300" src="assets/readme/timberman.gif">
+ <img width="460" height="300" src="assets/readme/timberman.gif">
 </p>
 
 <h2 id='Sobre' align="center">Simulando o jogo virtual Timberman na plataforma do Arduino</h2>
@@ -33,4 +33,11 @@
 <br>
 
 <p><strong>1º</strong> Faça download da <a href='https://www.arduino.cc/en/software' target='_blank'>Arduino IDE</a>, porque através dela é possível escrever, compilar e enviar o código para o <strong>microcontrolador</strong> do Arduino.</p>
-
+<p><strong>2º</strong> Monte o circuito de acordo com o esquema a seguir:</p>
+<p align="center">
+ <img width="460" height="300" src="assets/schema.png">
+</p>
+<p><strong>3º</strong> Faça o download do diretório <strong>code/code.ino</strong> é importante que o arquivo .ino esteja em um diretório com o mesmo nome para ser executado corretamente pelo Arduino IDE.</p>
+<p><strong>4º</strong> Agora, basta enviar o código para o Arduino através do botão <strong>upload</strong>, durante esse processo, o Arduino Uno deve estar conectado no computador via USB e tando o modelo do Arduino quanto a porta <strong>COM</strong>
+ em que a conexão é feita devem ser informados. Geralmente a selecão do modelo e da porta COM é feita automaticamente pelo Arduino IDE, mas caso haja problemas basta buscar a solução na internet ou abrir uma issue aqui.</p>
+ <p><strong>5º</strong> Finalizado! Comece a testar e jogar essa recriação do jogo casual Timberman feita utilizando um Arduino e alguns periféricos.</p>
