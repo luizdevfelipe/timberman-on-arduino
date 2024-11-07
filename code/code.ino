@@ -252,7 +252,7 @@ void mostraDisplay(char lado = 'n', bool bate = false) {
             altura = 0;
             atual++;
           }
-        // caso não esteja na primeira linha, o vetor é definido de modo que as linhas sejam adiantadas em uma unidade
+          // caso não esteja na primeira linha, o vetor é definido de modo que as linhas sejam adiantadas em uma unidade
         } else {
           temp[row][col] = t[row - 1][col];
         }
@@ -383,24 +383,34 @@ void selectCol(int col, int state) {
 
 // função que define os valores padrões de uma nova partida
 void definir_valores_padroes() {
+  lcd_1.setBacklight(HIGH);
+  lcd_1.clear();
+  lcd_1.setCursor(0, 0);
   // Verifica se a pontuação é maior que 60, exibindo o recorde do jogo, senão uma mensagem explicativa
   if (pontuacao > 60) {
+    int eeprom = EEPROM.read(0);
     // Verifica se a pontuação atual foi maior que o recorde registrado, armazenando-a
-    if (pontuacao > EEPROM.read(0)) {
+    if (pontuacao > eeprom) {
+      // exibe uma mensagem de novo recorde
+      lcd_1.print("Novo Recorde!");
+      lcd_1.setCursor(0, 1);
+      lcd_1.print("Registrado: ");
+      // escreve na memória EEPROM
       EEPROM.write(0, pontuacao);
+      eeprom = pontuacao;
+    } else if (eeprom >= 150) {
+      // caso um valor maior que 150 seja gravado, por padrão ou pontuação, a memória é redefinida
+      EEPROM.write(0, 0);
+    } else {
+      // caso não tenha batido o recorde, mas uma pontuação maior que 60, exibe-o
+      lcd_1.print("Maior Pontuacao");
+      lcd_1.setCursor(0, 1);
+      lcd_1.print("Registrada: ");
     }
     // Exibe a maior pontuação registrada
-    lcd_1.clear();
-    lcd_1.setCursor(0, 0);
-    lcd_1.print("Maior Pontuacao");
-    lcd_1.setCursor(0, 1);
-    lcd_1.print("Registrada: ");
-    lcd_1.print(EEPROM.read(0));
+    lcd_1.print(eeprom);
   } else {
     // Exibe uma mensagem instrutiva
-    lcd_1.setBacklight(HIGH);
-    lcd_1.clear();
-    lcd_1.setCursor(0, 0);
     lcd_1.print("Aperte um botao");
     lcd_1.setCursor(0, 1);
     lcd_1.print("Evite os galhos!");
