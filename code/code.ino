@@ -97,8 +97,8 @@ int atual;
 int altura;
 int pontuacao;
 unsigned long tempoAnterior;
-int anteriorEsq;
-int anteriorDir;
+bool anteriorEsq;
+bool anteriorDir;
 bool temp[8][8];
 char ladoAnterior;
 float tempo;
@@ -131,7 +131,7 @@ void setup() {
 void loop() {
   // delay que evita mal contato de leitura dos botões
   delay(5);
-  // condição que verifica se um dois dois botões foi pressionado, iniciando o jogo
+  // condição que verifica se um dos dois botões foi pressionado, iniciando o jogo
   if (digitalRead(left) == HIGH || digitalRead(right) == HIGH) {
     // loop que fica ativo enquanto o jogador não perdeu, executando a lógica do jogo
     while (!perdeu && tempo > 0) {
@@ -193,7 +193,7 @@ void loop() {
 
 // função que irá ler a jogada o usuário, verificando se foi válida, aumentando a pontuação e atualizando a matriz led
 bool jogando() {
-  // variáveis com valores padrões antes da leitura e verificação do click pelo jogador
+  // variáveis com valores padrões antes da leitura
   char lado;
   bool bateu = false;
   // leitura das portas do Arduino referentes aos botões
@@ -303,7 +303,7 @@ void mostraDisplay(char lado = 'n', bool bate = false) {
   // atualiza o lado anterior
   ladoAnterior = lado;
 
-  // exibe o vetor no display selecionando led por led
+  // exibe o vetor no display selecionando led por led através de funções
   for (int row = 0; row < 8; row++) {
     selectRow(row + 1);
     for (int col = 0; col < 8; col++) selectCol(col + 1, temp[row][col]);
@@ -342,7 +342,7 @@ void mostraPontuacao() {
   lcd_1.setBacklight(LOW);
   delay(1000);
   lcd_1.setBacklight(HIGH);
-  delay(2100);
+  delay(2000);
 }
 
 // função que seleciona uma linha com HIGH e ignora as outras com LOW
@@ -383,6 +383,7 @@ void selectCol(int col, int state) {
 
 // função que define os valores padrões de uma nova partida
 void definir_valores_padroes() {
+  // faz uma limpeza no display LCD
   lcd_1.setBacklight(HIGH);
   lcd_1.clear();
   lcd_1.setCursor(0, 0);
@@ -399,7 +400,7 @@ void definir_valores_padroes() {
       EEPROM.write(0, pontuacao);
       eeprom = pontuacao;
     } else if (eeprom >= 150) {
-      // caso um valor maior que 150 seja gravado, por padrão ou pontuação, a memória é redefinida
+      // caso um valor maior que 150 seja gravado, por padrão ou pontuação alcançada, a memória é redefinida
       EEPROM.write(0, 0);
     } else {
       // caso não tenha batido o recorde, mas uma pontuação maior que 60, exibe-o
@@ -424,8 +425,8 @@ void definir_valores_padroes() {
   altura = 0;
   pontuacao = 0;
   tempoAnterior = 0;
-  anteriorEsq = LOW;
-  anteriorDir = LOW;
+  anteriorEsq = 0;
+  anteriorDir = 0;
   ladoAnterior = 'e';
   tempo = 5;
   perdeu = false;
